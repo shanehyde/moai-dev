@@ -306,13 +306,13 @@ void MOAIFacebookIOS::HandleOpenURL ( NSURL* url ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIFacebookIOS::ReceivedRequestResponse ( cc8* response ) {
+void MOAIFacebookIOS::ReceivedRequestResponse ( NSData * response ) {
 	
 	MOAILuaStateHandle state = MOAILuaRuntime::Get ().State ();
 	
 	if ( this->PushListener ( REQUEST_RESPONSE, state )) {
 
-		state.Push ( response );
+		[response toLua:state];
 		state.DebugCall ( 1, 0 );
 	}
 }
@@ -387,11 +387,9 @@ void MOAIFacebookIOS::SessionDidNotLogin () {
 #pragma mark Protocol MOAIFacebookIOSRequestDelegate
 //================================================================//
 
-- ( void )request:( FBRequest* )request didLoadRawResponse:( NSData * )data {
-
-	cc8* jsonResponse = ( cc8* ) data.bytes;
+- ( void )request:( FBRequest* )request didLoadRawResponse:( NSData * )response {
 	
-	MOAIFacebookIOS::Get ().ReceivedRequestResponse ( jsonResponse );
+	MOAIFacebookIOS::Get ().ReceivedRequestResponse ( response );
 }
 
 @end
