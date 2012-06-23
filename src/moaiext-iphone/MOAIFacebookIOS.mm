@@ -34,13 +34,8 @@ int MOAIFacebookIOS::_extendToken ( lua_State* L ) {
 int MOAIFacebookIOS::_getExpirationDate ( lua_State* L ) {
 	
 	MOAILuaState state ( L );
-	
-	NSDateFormatter *formatter = [[ NSDateFormatter alloc ] init ];
-	[ formatter setDateFormat:@"dd-MM-yyyy HH:mm:ss" ];
-	NSString *dateString = [ formatter stringFromDate:[ MOAIFacebookIOS::Get ().mFacebook expirationDate ]];
-	[ formatter release ];
-	
-	MOAIFacebookIOS::Get ().mExpirationDate = [ dateString UTF8String ];
+
+	MOAIFacebookIOS::Get ().mExpirationDate = [ [NSDate iso8601StringFromDate:[MOAIFacebookIOS::Get ().mFacebook expirationDate]]  UTF8String ];
 	if ( !MOAIFacebookIOS::Get ().mExpirationDate.empty ()) {
 		lua_pushstring ( L, MOAIFacebookIOS::Get ().mExpirationDate.c_str ());
 	} else {
@@ -248,15 +243,11 @@ int MOAIFacebookIOS::_setExpirationDate ( lua_State* L ) {
 	cc8* expirationDate = state.GetValue < cc8* >( 1, "" );
 
 	NSString *dateString = [[ NSString alloc ] initWithUTF8String:expirationDate ];
-	NSDateFormatter *formatter = [[ NSDateFormatter alloc ] init ];
-	[ formatter setDateFormat:@"dd-MM-yyyy HH:mm:ss" ];
-	NSDate *date = [ formatter dateFromString:dateString ];
 
 	MOAIFacebookIOS::Get ().mExpirationDate = expirationDate;
-	MOAIFacebookIOS::Get ().mFacebook.expirationDate = date;
+	MOAIFacebookIOS::Get ().mFacebook.expirationDate = [NSDate dateFromISO8601String:dateString] ;
 
 	[ dateString release ];
-	[ formatter release ];
 	
 	return 0;
 }
@@ -485,13 +476,8 @@ void MOAIFacebookIOS::SessionExtended ( cc8* token, cc8* expDate ) {
 	}
 
 	- (void) fbDidExtendToken:( NSString* )accessToken expiresAt:( NSDate* )expiresAt {
-		
-		NSDateFormatter *formatter = [[ NSDateFormatter alloc ] init ];
-		[ formatter setDateFormat:@"dd-MM-yyyy HH:mm:ss" ];
-		NSString *dateString = [ formatter stringFromDate:expiresAt ];
-		[ formatter release ];
-		
-		MOAIFacebookIOS::Get ().SessionExtended( [ accessToken UTF8String ], [ dateString UTF8String ]);
+			
+		MOAIFacebookIOS::Get ().SessionExtended( [ accessToken UTF8String ], [ [NSDate iso8601StringFromDate:expiresAt] UTF8String ]);
 	}
 
 	- (void) fbDidLogout {
