@@ -1,6 +1,26 @@
 ================================================================
 = Moai SDK
 = Version 1.2
+= Revision 2
+================================================================
+A few important bug fixes going out in this update. We locked the host
+on iOS to portrait mode by default, and added a way to grab a frame
+buffer into a MOAIImage in MOAIRenderMgr.
+
+- Apsalar - updated Apsalar lua module to match current API
+- Documentation - updated for MOAIBillingIOS and FacebookIOS
+- Samples - the run.sh files have returned
+- iOS - by default will be locked to portrait mode, check MoaiVC.mm to change to landscape or to unlock all orientations
+- iOS - fixed a bug where objects would be displayed incorrectly on start-up
+- OSX - fixed an issue where the moai executable in the bin folder was appearing as a document and not executable
+- MOAIRenderMgr - added a method to screenshot the next frame and save to a MOAIImage, see samples/image/image-framebuffer-grab
+- MOAIEnvironment - screenWidth/screenHeight renamed to horizontal/verticalResolution
+- MOAIDataBufferStream - fixed a crash on an open without a close
+- MOAIFont - fixed a bug with kerning, some letters would be displayed too close
+
+================================================================
+= Moai SDK
+= Version 1.2
 = Revision 1
 ================================================================
 This release has many bug fixes across the board. Thanks to everyone
