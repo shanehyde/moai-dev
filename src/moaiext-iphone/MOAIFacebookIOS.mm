@@ -14,9 +14,10 @@
 
 //----------------------------------------------------------------//
 /**	@name	extendToken
- @text	Extends the life of an active token. Should be called on app resume/start.
+	@text	Extends the life of an active token. Should be called on app resume/start.
  
- @out	nil
+	@in		nil
+	@out	nil
  */
 int MOAIFacebookIOS::_extendToken ( lua_State* L ) {
 	
@@ -27,9 +28,10 @@ int MOAIFacebookIOS::_extendToken ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 /**	@name	getExpirationDate
- @text	Retrieve the Facebook login token expiration date.
+	@text	Retrieve the Facebook login token expiration date.
  
- @out	string	token expiration date
+	@in		nil
+	@out	string	token expiration date
  */
 int MOAIFacebookIOS::_getExpirationDate ( lua_State* L ) {
 	
@@ -49,7 +51,8 @@ int MOAIFacebookIOS::_getExpirationDate ( lua_State* L ) {
 //----------------------------------------------------------------//
 /**	@name	getToken
 	@text	Retrieve the Facebook login token.
-				
+	
+	@in		nil
 	@out	string	token
 */
 int MOAIFacebookIOS::_getToken ( lua_State* L ) {
@@ -70,10 +73,10 @@ int MOAIFacebookIOS::_getToken ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 /**	@name	graphRequest
- @text	Make a request on Facebook's Graph API
+	@text	Make a request on Facebook's Graph API
  
- @in	string	path
- @out	nil
+	@in		string	path
+	@out	nil
  */
 int MOAIFacebookIOS::_graphRequest ( lua_State* L ) {
 	
@@ -141,7 +144,8 @@ int MOAIFacebookIOS::_login ( lua_State* L ) {
 //----------------------------------------------------------------//
 /**	@name	logout
 	@text	Log the user out of Facebook.
-				
+	
+	@in		nil
 	@out 	nil
 */
 int MOAIFacebookIOS::_logout ( lua_State* L ) {
@@ -218,6 +222,7 @@ int MOAIFacebookIOS::_sendRequest ( lua_State* L ) {
 /**	@name	sessionValid
 	@text	Determine whether or not the current Facebook session is valid.
 				
+	@in		nil
 	@out 	boolean	valid
 */
 int MOAIFacebookIOS::_sessionValid ( lua_State* L ) {
@@ -231,10 +236,10 @@ int MOAIFacebookIOS::_sessionValid ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 /**	@name	setExpirationDate
- @text	Set the Facebook login token expiration date.
+	@text	Set the Facebook login token expiration date.
  
- @in		string	expirationDate			The login token expiration date. See Facebook documentation.
- @out 	nil
+	@in		string	expirationDate			The login token expiration date. See Facebook documentation.
+	@out 	nil
  */
 int MOAIFacebookIOS::_setExpirationDate ( lua_State* L ) {
 	
