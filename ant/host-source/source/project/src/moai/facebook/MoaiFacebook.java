@@ -16,6 +16,7 @@ import android.os.Bundle;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.Facebook.ServiceListener;
 import com.facebook.android.FacebookError;
 
 //================================================================//
@@ -46,6 +47,7 @@ public class MoaiFacebook {
 
 	protected static native void	AKUNotifyFacebookLoginComplete	( int statusCode );
 	protected static native void	AKUNotifyFacebookDialogComplete	( int statusCode );
+	protected static native void	AKUNotifyFacebookSessionExtended	( String token, String tokenDate );
 
 	//----------------------------------------------------------------//
 	public static void onActivityResult ( int requestCode, int resultCode, Intent data ) {
@@ -70,7 +72,33 @@ public class MoaiFacebook {
 	//----------------------------------------------------------------//	
 	public static void extendToken () {
 
-		sFacebook.extendAccessTokenIfNeeded ( sActivity, null ); 
+		MoaiLog.i ( "MoaiFacebook extendToken" );
+
+		sFacebook.extendAccessToken ( sActivity, new ServiceListener () {
+
+			@Override
+
+			public void onComplete(Bundle values) {
+				synchronized ( Moai.sAkuLock ) {
+					MoaiLog.i ( "MoaiFacebook extendToken onComplete" );
+					AKUNotifyFacebookSessionExtended( sFacebook.getAccessToken(), String.valueOf( sFacebook.getAccessExpires() ) );
+				}
+			}
+
+			@Override
+	        public void onFacebookError(FacebookError e) {
+				synchronized ( Moai.sAkuLock ) {
+		        	MoaiLog.i ( "MoaiFacebook extendToken onFacebookError" );
+		        }
+	        }
+
+	        @Override
+        	public void onError(Error e) {
+				synchronized ( Moai.sAkuLock ) {
+					MoaiLog.i ( "MoaiFacebook extendToken onError" );
+				}
+        	}
+		} ); 
 	}
 
 	//----------------------------------------------------------------//	
@@ -78,7 +106,24 @@ public class MoaiFacebook {
 
 		return sFacebook.getAccessToken (); 
 	}
-	
+
+	//----------------------------------------------------------------//	
+	public static String getExpires () {
+		return String.valueOf( sFacebook.getAccessExpires () );
+	}
+
+	//----------------------------------------------------------------//	
+	public static void setExpires (String expires) {
+		long value;
+		try
+		{
+			value = Long.parseLong( expires );
+		} catch ( NumberFormatException e ) {
+			value = 0;
+		}
+		sFacebook.setAccessExpires ( value );
+	}
+		
 	//----------------------------------------------------------------//	
 	public static String graphRequest ( String path ) {
 
@@ -101,7 +146,7 @@ public class MoaiFacebook {
 	public static void init ( String appId ) {
 		
 		sFacebook = new Facebook ( appId ); 
-		sFacebook.extendAccessTokenIfNeeded ( sActivity, null );
+		MoaiFacebook.extendToken ();
 	}
 
 	//----------------------------------------------------------------//	

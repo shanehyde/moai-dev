@@ -47,7 +47,7 @@ int MOAIFacebookAndroid::_extendToken ( lua_State* L ) {
 		USLog::Print ( "MOAIFacebookAndroid: Unable to find java class %s", "com/ziplinegames/moai/MoaiFacebook" );
     } else {
 	
-    	jmethodID extendToken = env->GetStaticMethodID ( facebook, "extendToken", "()V;" );
+    	jmethodID extendToken = env->GetStaticMethodID ( facebook, "extendToken", "()V" );
    		if ( extendToken == NULL ) {
 	
 			USLog::Print ( "MOAIFacebookAndroid: Unable to find static java method %s", "extendToken" );
@@ -103,6 +103,46 @@ int MOAIFacebookAndroid::_getToken ( lua_State* L ) {
 	return 1;
 }
 
+//----------------------------------------------------------------//
+/**	@name	getExpirationDate
+	@text	Retrieve the Facebook login expiration date.
+				
+	@out	string	date
+*/
+int MOAIFacebookAndroid::_getExpirationDate ( lua_State* L ) {
+	
+	MOAILuaState state ( L );
+	
+	JNI_GET_ENV ( jvm, env );
+	
+	jclass facebook = env->FindClass ( "com/ziplinegames/moai/MoaiFacebook" );
+    if ( facebook == NULL ) {
+	
+		USLog::Print ( "MOAIFacebookAndroid: Unable to find java class %s", "com/ziplinegames/moai/MoaiFacebook" );
+    } else {
+	
+    	jmethodID getToken = env->GetStaticMethodID ( facebook, "getExpires", "()Ljava/lang/String;" );
+   		if ( getToken == NULL ) {
+	
+			USLog::Print ( "MOAIFacebookAndroid: Unable to find static java method %s", "getToken" );
+		} else {
+	
+			jstring jtoken = ( jstring )env->CallStaticObjectMethod ( facebook, getToken );
+			
+			JNI_GET_CSTRING ( jtoken, token );
+
+			lua_pushstring ( state, token );
+			
+			JNI_RELEASE_CSTRING ( jtoken, token );
+			
+			return 1;
+		}
+	}
+	
+	lua_pushnil ( state );
+
+	return 1;
+}
 //----------------------------------------------------------------//
 /**	@name	graphRequest
 	@text	Performs a requset on the Facebook Graph API
@@ -463,6 +503,42 @@ int MOAIFacebookAndroid::_setToken ( lua_State* L ) {
 	return 0;
 }
 
+//----------------------------------------------------------------//
+/**	@name	setExpirationDate
+	@text	Set the Facebook login expiration date.
+			
+	@in		string	date			The login expiration date. See Facebook documentation.
+	@out 	nil
+*/
+int MOAIFacebookAndroid::_setExpirationDate ( lua_State* L ) {
+
+	MOAILuaState state ( L );
+	
+	cc8* token = lua_tostring ( state, 1 );
+	
+	JNI_GET_ENV ( jvm, env );
+	
+	JNI_GET_JSTRING ( token, jtoken );
+	
+	jclass facebook = env->FindClass ( "com/ziplinegames/moai/MoaiFacebook" );
+    if ( facebook == NULL ) {
+	
+		USLog::Print ( "MOAIFacebookAndroid: Unable to find java class %s", "com/ziplinegames/moai/MoaiFacebook" );
+    } else {
+	
+    	jmethodID setToken = env->GetStaticMethodID ( facebook, "setExpires", "(Ljava/lang/String;)V" );
+   		if ( setToken == NULL ) {
+	
+			USLog::Print ( "MOAIFacebookAndroid: Unable to find static java method %s", "setToken" );
+		} else {
+	
+			env->CallStaticVoidMethod ( facebook, setToken, jtoken );		
+		}
+	}
+	
+	return 0;
+}
+
 //================================================================//
 // MOAIFacebookAndroid
 //================================================================//
@@ -485,9 +561,12 @@ void MOAIFacebookAndroid::RegisterLuaClass ( MOAILuaState& state ) {
 	state.SetField ( -1, "DIALOG_DID_NOT_COMPLETE",	( u32 ) DIALOG_DID_NOT_COMPLETE );
 	state.SetField ( -1, "SESSION_DID_LOGIN",		( u32 ) SESSION_DID_LOGIN );
 	state.SetField ( -1, "SESSION_DID_NOT_LOGIN",	( u32 ) SESSION_DID_NOT_LOGIN );
+	state.SetField ( -1, "SESSION_EXTENDED",		( u32 ) SESSION_EXTENDED );
 	
 	luaL_Reg regTable [] = {
+		{ "extendToken",	_extendToken },
 		{ "getToken",		_getToken },
+		{ "getExpirationDate",		_getExpirationDate },
 		{ "graphRequest",	_graphRequest },
 		{ "init",			_init },
 		{ "login",			_login },
@@ -497,6 +576,7 @@ void MOAIFacebookAndroid::RegisterLuaClass ( MOAILuaState& state ) {
 		{ "sessionValid",	_sessionValid },
 		{ "setListener",	_setListener },
 		{ "setToken",		_setToken },
+		{ "setExpirationDate",		_setExpirationDate },
 		{ NULL, NULL }
 	};
 
@@ -537,6 +617,24 @@ void MOAIFacebookAndroid::NotifyDialogComplete ( int code ) {
 	}
 }
 
+//----------------------------------------------------------------//
+void MOAIFacebookAndroid::NotifySessionExtended ( cc8 * token, cc8 * expires ) {
+	
+	USLog::Print ( "In NotifySessionExtended" );
+
+	MOAILuaRef& callback = this->mListeners [ SESSION_EXTENDED ];
+
+	if ( callback ) {
+	
+		MOAILuaStateHandle state = callback.GetSelf ();
+
+		lua_pushstring ( state, token );
+		lua_pushstring ( state, expires );
+	
+		state.DebugCall ( 0, 2 );
+	}
+}
+
 //================================================================//
 // Facebook JNI methods
 //================================================================//
@@ -553,4 +651,14 @@ extern "C" void Java_com_ziplinegames_moai_MoaiFacebook_AKUNotifyFacebookDialogC
 	MOAIFacebookAndroid::Get ().NotifyDialogComplete ( code );
 }
 
+//----------------------------------------------------------------//
+extern "C" void Java_com_ziplinegames_moai_MoaiFacebook_AKUNotifyFacebookSessionExtended ( JNIEnv* env, jclass obj, jstring token, jstring expires ) {
+
+	USLog::Print ( "In Java_com_ziplinegames_moai_MoaiFacebook_AKUNotifyFacebookSessionExtended" );
+	JNI_GET_CSTRING( token, ctoken );
+	JNI_GET_CSTRING( expires, cexpires );
+	MOAIFacebookAndroid::Get ().NotifySessionExtended ( ctoken, cexpires );
+	JNI_RELEASE_CSTRING( token, ctoken );
+	JNI_RELEASE_CSTRING( expires, cexpires );
+}
 #endif
