@@ -572,11 +572,12 @@ public class Moai {
 		try {
 			PackageManager pm = sActivity.getPackageManager();
 
-			Intent intent = new Intent ( Intent.ACTION_VIEW, Uri.parse ( url ));
-			ComponentName cn = intent.resolveActivity(pm);
-			//String pkg = intent.getPackage();
-			if (cn == null)
+			Intent intent = new Intent ( Intent.ACTION_VIEW, Uri.parse ( url ) );
+			ComponentName cn = intent.resolveActivity( pm );
+
+			if ( cn == null )
 				return false;
+
 			MoaiLog.i ( "getPackage() = "+cn.getPackageName()+" class="+cn.getClassName() );
 			return true;
 		}
