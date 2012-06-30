@@ -355,3 +355,4 @@ MOAICrittercism = MOAICrittercismAndroid or MOAICrittercismIOS
 MOAIFacebook = MOAIFacebookAndroid or MOAIFacebookIOS
 MOAINotifications = MOAINotificationsAndroid or MOAINotificationsIOS
 MOAITapjoy = MOAITapjoyAndroid or MOAITapjoyIOS
+MOAIFlurry = MOAIFlurryAndroid or MOAIFlurryIOS

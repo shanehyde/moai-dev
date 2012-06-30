@@ -1407,6 +1407,9 @@
 		07F59347143E318B00C6D185 /* MOAIUntzSampleBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F59343143E318B00C6D185 /* MOAIUntzSampleBuffer.h */; };
 		07FAC91613B8F1CA00AFD0B3 /* moaicore-pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07FAC91513B8F1CA00AFD0B3 /* moaicore-pch.cpp */; };
 		07FAC91813B8F1E000AFD0B3 /* uslscore-pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07FAC91713B8F1E000AFD0B3 /* uslscore-pch.cpp */; };
+		3444E8E9159EDCD20015E2C2 /* Flurry.h in Headers */ = {isa = PBXBuildFile; fileRef = 3444E8E8159EDCD20015E2C2 /* Flurry.h */; };
+		3444E8EC159EDD170015E2C2 /* MOAIFlurryIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3444E8EA159EDD170015E2C2 /* MOAIFlurryIOS.h */; };
+		3444E8ED159EDD170015E2C2 /* MOAIFlurryIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3444E8EB159EDD170015E2C2 /* MOAIFlurryIOS.mm */; };
 		66459FB41511638B0075BF13 /* AKU-audiosampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66459FB31511638B0075BF13 /* AKU-audiosampler.cpp */; };
 		66459FB51511638B0075BF13 /* AKU-audiosampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66459FB31511638B0075BF13 /* AKU-audiosampler.cpp */; };
 		66459FBA1511641F0075BF13 /* MOAIAudioSampler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66459FB81511641F0075BF13 /* MOAIAudioSampler.cpp */; };
@@ -4165,6 +4168,9 @@
 		07F59343143E318B00C6D185 /* MOAIUntzSampleBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MOAIUntzSampleBuffer.h; path = "moaiext-untz/MOAIUntzSampleBuffer.h"; sourceTree = "<group>"; };
 		07FAC91513B8F1CA00AFD0B3 /* moaicore-pch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "moaicore-pch.cpp"; sourceTree = "<group>"; };
 		07FAC91713B8F1E000AFD0B3 /* uslscore-pch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "uslscore-pch.cpp"; sourceTree = "<group>"; };
+		3444E8E8159EDCD20015E2C2 /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flurry.h; path = "../../3rdparty/flurry-ios/Flurry.h"; sourceTree = "<group>"; };
+		3444E8EA159EDD170015E2C2 /* MOAIFlurryIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MOAIFlurryIOS.h; path = "moaiext-iphone/MOAIFlurryIOS.h"; sourceTree = "<group>"; };
+		3444E8EB159EDD170015E2C2 /* MOAIFlurryIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MOAIFlurryIOS.mm; path = "moaiext-iphone/MOAIFlurryIOS.mm"; sourceTree = "<group>"; };
 		66459FB31511638B0075BF13 /* AKU-audiosampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "AKU-audiosampler.cpp"; sourceTree = "<group>"; };
 		66459FB81511641F0075BF13 /* MOAIAudioSampler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIAudioSampler.cpp; sourceTree = "<group>"; };
 		66459FB91511641F0075BF13 /* MOAIAudioSampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIAudioSampler.h; sourceTree = "<group>"; };
@@ -5805,6 +5811,7 @@
 		032409EE13564CAF000ADC60 /* 3rd party */ = {
 			isa = PBXGroup;
 			children = (
+				3444E8E6159EDCB90015E2C2 /* flurry */,
 				66A643AD15462EBF009796A3 /* c-ares-1.7.5 */,
 				0725E2EB14F45AC700551DB5 /* adcolony */,
 				032409EF13564CAF000ADC60 /* box2d */,
@@ -6899,6 +6906,14 @@
 			name = CustomTemplate;
 			sourceTree = "<group>";
 			usesTabs = 1;
+		};
+		3444E8E6159EDCB90015E2C2 /* flurry */ = {
+			isa = PBXGroup;
+			children = (
+				3444E8E8159EDCD20015E2C2 /* Flurry.h */,
+			);
+			name = flurry;
+			sourceTree = "<group>";
 		};
 		66459FB71511641F0075BF13 /* moaiext-audiosampler */ = {
 			isa = PBXGroup;
@@ -8027,6 +8042,8 @@
 				CDF2C616151B146F0009D47D /* MOAIDialogIOS.mm */,
 				E9A41ADA151ABEDC00650276 /* MOAIFacebookIOS.h */,
 				E9A41ADB151ABEDC00650276 /* MOAIFacebookIOS.mm */,
+				3444E8EA159EDD170015E2C2 /* MOAIFlurryIOS.h */,
+				3444E8EB159EDD170015E2C2 /* MOAIFlurryIOS.mm */,
 				E9CA1E54151C7D71005F39B7 /* MOAIGameCenterIOS.h */,
 				E9CA1E55151C7D71005F39B7 /* MOAIGameCenterIOS.mm */,
 				CD91E3FE15252E2F00AE1883 /* MOAIKeyboardIOS.h */,
@@ -10856,6 +10873,8 @@
 				669E287815914B320037E24C /* RiffFile.h in Headers */,
 				669E287A15914B320037E24C /* WaveFile.h in Headers */,
 				669E287C15914B320037E24C /* WaveFileAudioSource.h in Headers */,
+				3444E8E9159EDCD20015E2C2 /* Flurry.h in Headers */,
+				3444E8EC159EDD170015E2C2 /* MOAIFlurryIOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -13297,6 +13316,7 @@
 				66C572A91575714B00A486AB /* USBase64Encoder.cpp in Sources */,
 				66C572AF1575717000A486AB /* MOAIGridDeck2D.cpp in Sources */,
 				E9DE4582157EA38800630A7D /* MOAIMoviePlayerIOS.mm in Sources */,
+				3444E8ED159EDD170015E2C2 /* MOAIFlurryIOS.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
