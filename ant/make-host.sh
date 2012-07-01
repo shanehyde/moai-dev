@@ -8,7 +8,7 @@
 
 	set -e
 
-	usage="usage: $0 -p <package> [-s] [-i thumb | arm] [-a all | armeabi | armeabi-v7a] [-l appPlatform] [--use-fmod true | false] [--use-untz true | false] [--disable-adcolony] [--disable-billing] [--disable-chartboost] [--disable-crittercism] [--disable-facebook] [--disable-push] [--disable-tapjoy]"
+	usage="usage: $0 -p <package> [-s] [-i thumb | arm] [-a all | armeabi | armeabi-v7a] [-l appPlatform] [--use-fmod true | false] [--use-untz true | false] [--disable-adcolony] [--disable-billing] [--disable-chartboost] [--disable-crittercism] [--disable-facebook] [--disable-push] [--disable-tapjoy] [--enable-flurry]"
 	skip_build="false"
 	package_name=
 	arm_mode="arm"
@@ -23,6 +23,7 @@
 	facebook_flags=
 	push_flags=
 	tapjoy_flags=
+	flurry_flags=
 	
 	while [ $# -gt 0 ];	do
 	    case "$1" in
@@ -40,6 +41,7 @@
 			--disable-facebook)  facebook_flags="--disable-facebook";;
 			--disable-push)  push_flags="--disable-push";;
 			--disable-tapjoy)  tapjoy_flags="--disable-tapjoy";;
+			--enable-flurry)  flurry_flags="--enable-flurry";;
 			-*)
 		    	echo >&2 \
 		    		$usage
@@ -91,7 +93,7 @@
 	
 	if [ x"$skip_build" != xtrue ]; then
 		pushd libmoai > /dev/null
-			bash build.sh -i $arm_mode -a $arm_arch -l $app_platform --use-fmod $use_fmod --use-untz $use_untz $adcolony_flags $billing_flags $chartboost_flags $crittercism_flags $facebook_flags $push_flags $tapjoy_flags
+			bash build.sh -i $arm_mode -a $arm_arch -l $app_platform --use-fmod $use_fmod --use-untz $use_untz $adcolony_flags $billing_flags $chartboost_flags $crittercism_flags $facebook_flags $push_flags $tapjoy_flags $flurry_flags
 		popd > /dev/null
 	fi
 
@@ -142,6 +144,10 @@
 
 	if [ x"$tapjoy_flags" == x ]; then
 		required_libs="$required_libs \"tapjoy\""
+	fi
+
+	if [ x"$flurry_flags" != x ]; then
+		required_libs="$required_libs \"flurry\""
 	fi
 
 	cp -f host-source/d.settings-local.sh $new_host_dir/settings-local.sh
