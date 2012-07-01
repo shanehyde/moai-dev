@@ -98,7 +98,6 @@ int MOAIFlurryIOS::_logTimedEvent( lua_State * L ) {
  @text	End a timed event.
  
  @in	string eventName	The name of the event to send to Flurry
- @in	table params		(optional)The params to send to Flurry with the event or nil if not required.
  @out	nil
  */
 int MOAIFlurryIOS::_endTimedEvent( lua_State * L ) {
@@ -110,15 +109,7 @@ int MOAIFlurryIOS::_endTimedEvent( lua_State * L ) {
 	if ( eventName == NULL )
 		return 0;
 	
-	if ( state.IsType ( 2, LUA_TTABLE )) {
-		NSMutableDictionary* paramsDict = [[ NSMutableDictionary alloc ] init ];
-		[ paramsDict initWithLua:state stackIndex:2 ];
-		
-		[ Flurry endTimedEvent:eventName withParameters:paramsDict ];
-	}
-	else {
-		[ Flurry endTimedEvent:eventName withParameters:nil ];
-	}
+	[ Flurry endTimedEvent:eventName withParameters:nil ];
 
 	return 0;
 }
