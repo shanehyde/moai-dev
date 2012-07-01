@@ -323,6 +323,10 @@
 		REGISTER_LUA_CLASS ( MOAITapjoyAndroid );
 #endif
 
+#ifdef 	ENABLE_FLURRY
+		MOAIFlurryAndroid::Affirm ();
+		REGISTER_LUA_CLASS ( MOAIFlurryAndroid );
+#endif
 		AKURunBytecode ( moai_lua, moai_lua_SIZE );
 
 		inputQueue = new LockingQueue < InputEvent > ();

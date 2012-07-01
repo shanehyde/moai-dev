@@ -9,7 +9,7 @@
 	set -e
 	
 	# check for command line switches
-	usage="usage: $0 [-v] [-i thumb | arm] [-a all | armeabi | armeabi-v7a] [-l appPlatform] [--use-fmod true | false] [--use-untz true | false] [--disable-adcolony] [--disable-billing] [--disable-chartboost] [--disable-crittercism] [--disable-facebook] [--disable-push] [--disable-tapjoy]"
+	usage="usage: $0 [-v] [-i thumb | arm] [-a all | armeabi | armeabi-v7a] [-l appPlatform] [--use-fmod true | false] [--use-untz true | false] [--disable-adcolony] [--disable-billing] [--disable-chartboost] [--disable-crittercism] [--disable-facebook] [--disable-push] [--disable-tapjoy] [--enable-flurry]"
 	verbose=
 	arm_mode="arm"
 	arm_arch="armeabi-v7a"
@@ -23,6 +23,7 @@
 	facebook_flags=
 	push_flags=
 	tapjoy_flags=
+	flurry_flags=
 	
 	while [ $# -gt 0 ];	do
 	    case "$1" in
@@ -39,6 +40,7 @@
 			--disable-facebook)  facebook_flags="-DDISABLE_FACEBOOK";;
 			--disable-push)  push_flags="-DDISABLE_NOTIFICATIONS";;
 			--disable-tapjoy)  tapjoy_flags="-DDISABLE_TAPJOY";;
+			--enable-flurry)  flurry_flags="-DENABLE_FLURRY";;
 			-*)
 		    	echo >&2 \
 		    		$usage
@@ -96,6 +98,7 @@
 		existing_facebook_flags=$( sed -n '10p' libs/package.txt )
 		existing_push_flags=$( sed -n '11p' libs/package.txt )
 		existing_tapjoy_flags=$( sed -n '12p' libs/package.txt )
+		existing_flurry_flags=$( sed -n '13p' libs/package.txt )
 
 		if [ x"$existing_arm_mode" != x"$arm_mode" ]; then
 			should_clean=true
@@ -144,6 +147,10 @@
 		if [ x"$existing_tapjoy_flags" != x"$tapjoy_flags" ]; then
 			should_clean=true
 		fi
+		
+		if [ x"$existing_flurry_flags" != x"$flurry_flags" ]; then
+			should_clean=true
+		fi		
 	fi
 	
 	if [ x"$should_clean" = xtrue ]; then
@@ -189,6 +196,13 @@
 		echo "Tapjoy will be disabled"
 	fi 
 
+	if [ x"$flurry_flags" == x ]; then
+		echo "Flurry will be disabled"
+	fi 
+	if [ x"$flurry_flags" != x ]; then
+		echo "Flurry will be enabled"
+	fi 
+
 	pushd jni > /dev/null
 		cp -f AppPlatform.mk AppPlatformDefined.mk
 		sed -i.backup s%@APP_PLATFORM@%"$app_platform"%g AppPlatformDefined.mk
@@ -211,6 +225,7 @@
 		sed -i.backup s%@DISABLE_FACEBOOK@%"$facebook_flags"%g OptionalComponentsDefined.mk
 		sed -i.backup s%@DISABLE_NOTIFICATIONS@%"$push_flags"%g OptionalComponentsDefined.mk
 		sed -i.backup s%@DISABLE_TAPJOY@%"$tapjoy_flags"%g OptionalComponentsDefined.mk
+		sed -i.backup s%@ENABLE_FLURRY@%"$flurry_flags"%g OptionalComponentsDefined.mk
 		sed -i.backup s%@USE_FMOD@%"$use_fmod"%g OptionalComponentsDefined.mk
 		sed -i.backup s%@USE_UNTZ@%"$use_untz"%g OptionalComponentsDefined.mk
 		rm -f OptionalComponentsDefined.mk.backup
@@ -248,3 +263,4 @@
 	echo "$facebook_flags" >> libs/package.txt
 	echo "$push_flags" >> libs/package.txt
 	echo "$tapjoy_flags" >> libs/package.txt
+	echo "$flurry_flags" >> libs/package.txt	
